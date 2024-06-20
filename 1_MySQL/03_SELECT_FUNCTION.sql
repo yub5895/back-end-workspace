@@ -248,5 +248,148 @@ SELECT emp_name, coalesce(bonus, 0), ifnull(bonus, 0) -- 두 개가 같은 효�
 FROM employee;
 
 -- 전 사원의 직원명, 보너스, 보너스 포함 연봉(급여 + 급여 * 보너스) * 12 조회
-SELECT emp_name, ifnull(bonus, ''), ifnull(salary + salary * bonus, 0) * 12 연봉
+SELECT emp_name, bonus, (salary + salary * ifnull(bonus, 0)) * 12 연봉
 FROM employee; 
+
+-- 직원명, 부서코드(dept_code) 조회 (부서코드가 없으면 '부서없음')
+SELECT  emp_name, ifnull(dept_code, '부서없음')
+FROM employee; 
+
+/*
+	NULLIF(값1, 값2)
+    - 두 개의 값이 동일하면 null 반환, 두 개의 값이 동일하지 않으면 값1 반환
+*/
+SELECT nullif('123', '123'), nullif('123', '456');-- null
+
+/*
+	IF(값1, 값2, 값3) | IF(조건, 조건이 True인 경우, 조건이 False인 경우)
+    - 값1이 null이 아니면 값2 반환, null이면 값3 반환
+    - 조건에 해당하면 두번째 값 반환, 해당하지 않으면 마지막 값 반환
+*/
+SELECT emp_name, bonus, if(bonus, 0.7, 0.1) -- null이 아닌애들은 0.7로 바꾸고, null인애들은 0.1로 바꾸겠다는 의미
+FROM employee;
+
+-- 직원명, 부서 코드가 있으면 '부서있음', 없으면 '부서없음' 조회
+SELECT emp_name, -- if(dept_code is not null, '부서있음', '부서없음')
+				if(dept_code is null, '부서없음', '부서있음')
+FROM employee; 
+
+-- 사번, 사원명 주민번호(emp_no), 성별(남, 여) - emp_no 활용해서! 조회
+SELECT emp_id, emp_name, emp_no, if(substr(emp_no, 8, 1) = 1, '남', '여') 성별
+FROM employee; 
+
+-- 사원명, 직급코드(job_code), 기존급여(salary), 인상된 급여 조회
+-- 정렬 : 직급코드 J1부터, 인상된 급여 높은 순서대로
+-- 직급코드가 J7인 사원은 급여를 10% 인상
+-- 직급코드가 J6인 사원은 급여를 15% 인상
+-- 직급코드가 J5인 사원은 급여를 20% 인상
+-- 그 외의 직급의 사원은 급여를 5% 인상
+SELECT emp_name, job_code, salary, format(if(job_code = 'J7', salary * 1.1, 
+if(job_code = 'J6', salary * 1.15,
+if(job_code = 'J5', salary * 1.2, salary * 1.05))), 0)'인상된 급여'
+FROM employee
+ORDER BY 2, 4 DESC;
+
+/*
+	CASE WHEN 조건식 1 THEN 결과값 1
+		 WHEN 조건식 2 THEN 결과값 2
+         ....
+         ELSE 결과값 N 
+	END
+    
+    -> if ~ else if ~ else 문과 유사
+*/
+SELECT emp_name, job_code, salary, 
+format(case when job_code = 'J7' then salary * 1.1
+	 when job_code = 'J6' then salary * 1.15
+     when job_code = 'J5' then salary * 1.2
+     else salary * 1.05
+	end, 0) "인상된 급여"
+FROM employee
+ORDER BY 2, 4 DESC; -- 위의 실습문제 if방식을 case when 방식으로 그대로 변경한것. 보기좋음
+
+-- 사원명, 급여, 급여 등급(1 ~ 4등급) 조회
+-- salary 값이 500만원 초과일 경우 1등급
+-- salary 값이 500만원 이하 350만원 초과일 경우 2등급
+-- salary 값이 350만원 이하 200만원 초과일 경우 3등급
+-- 그 외의 경우 4등급
+SELECT emp_name, salary,
+ case when salary > 5000000 then '1등급'
+       when salary > 3500000 then '2등급' -- 이미 500만원은 걸러졌으므로 500만원을 쓸 필요가 없음
+       when salary > 2000000 then '3등급'
+      else '4등급' 
+      end 급여등급
+FROM employee; 
+
+-- 그룹함수(집계함수)-----
+/*
+	그룹함수 --> 결과값 1개!
+    - 대량의 데이터들로 집계나 통계 같은 작업을 처리해야 하는 경우 사용되는 함수들
+    - 모든 그룹 함수는 NULL 값을 자동으로 제외하고 값이 있는 것들만 계산
+    
+    SUM : 해당 컬럼 값들의 총 합계 반환
+*/
+SELECT SUM(salary) -- salary를 같이 사용할 수 없음 
+FROM employee; 
+
+-- 부서코드가 D5인 사원들의 총 연봉(급여 * 12) 조회
+SELECT sum(salary * 12) 
+FROM employee 
+WHERE dept_code = 'D5'; 
+
+SELECT sum(case when dept_code = 'D5' then salary * 12 end)
+FROM employee;
+
+/*
+	AVG
+    - 해당 컬럼 값들의 평균값을 반환
+    - 모든 그룹 함수는 NULL 값을 자동으로 제외하기 때문에 
+	  AVG 함수를 사용할 때는 COALESCE 또는 IFNULL 함수와 함께 사용하는 걸 권장
+*/ 
+-- 전체 사원의 평균 급여, 평균 보너스율 조회
+SELECT 
+	avg(salary), avg(bonus), -- null값이 제외되어버림
+	avg(ifnull(salary, 0)), avg(ifnull(bonus, 0)) -- null값을 포함해서 진짜평균이 됨
+FROM employee; 
+
+/*
+	MIN : 해당 컬럼 값들 중에 가장 작은 값 변환
+    MAX : 해당 컬럼 값들 중에 가장 큰 값 변환
+*/
+SELECT 
+	min(emp_name), min(salary), min(hire_date),
+    max(emp_name), max(salary), max(hire_date)
+FROM employee; 
+
+/*
+	COUNT
+    - 컬럼 또는 행의 개수를 세서 반환
+    
+    * : 조회 결과에 해당하는 모든 행 개수를 반환
+    컬럼 : 해당 컬럼 값이 NULL이 아닌 행 개수 반환
+    distinct 컬럼 : 해당 컬럼값의 중복을 제거한 행 개수 반환
+*/
+-- 전체 사원 수 조회
+SELECT count(*)
+FROM employee;
+
+-- 보너스를 받은 사원 수 조회
+SELECT count(bonus)
+FROM employee;
+
+-- 위하고 똑같음
+SELECT count(*)
+FROM employee
+WHERE bonus is not null;
+
+-- 현재 사원들이 속해있는 부서 수 조회 / distinct는 겹치는걸 하나만 보이게해주기때문에 앞에 count를 넣어 수로 표현
+SELECT count(distinct dept_code)  
+FROM employee;
+
+-- 퇴사한 직원의 수 조회 (ent_date 또는 ent_yn)
+SELECT count(*)
+FROM employee
+WHERE ent_yn = "Y";
+
+SELECT count(ent_date)
+FROM employee;
