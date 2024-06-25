@@ -33,11 +33,41 @@ WHERE first_name = "JULIA" AND last_name = "MCQUEEN"
 LIMIT 10;
 
 -- 3. 영화 NOON PAPI에 나오는 배우들의 이름 조회
-SELECTtitle
-FROM film
-JOIN actor ON (film_id = actor_id)
+SELECT first_name, last_name
+FROM film_actor
+JOIN film USING (film_id)
+JOIN actor USING (actor_id)
+WHERE title = "NOON PAPI";
+
 -- 4. 각 카테고리별 이메일이 JOYCE.EDWARDS@sakilacustomer.org인 고객이 빌린 DVD 대여 수 조회
+SELECT *
+FROM film_category
+JOIN category USING (category_id)
+JOIN film USING (film_id)
+JOIN inventory USING (film_id)
+JOIN rental USING (inventory_id)
+JOIN customer USING (customer_id)
+WHERE email = "JOYCE.EDWARDS@sakilacustomer.org";
+
+SELECT name
+FROM film_category
+JOIN category USING (category_id)
+JOIN film USING (film_id)
+JOIN inventory USING (film_id)
+JOIN rental USING (inventory_id)
+JOIN customer USING (customer_id)
+GROUP BY name
+HAVING email = "JOYCE.EDWARDS@sakilacustomer.org";
+-- 못풀겠어욥..
 
 -- 5. 이메일이 JOYCE.EDWARDS@sakilacustomer.org인 고객이 가장 최근에 빌린 영화 제목과 영화 내용을 조회 
-
+SELECT title, description
+FROM film_category
+JOIN film USING (film_id)
+JOIN category USING (category_id)
+JOIN inventory USING (film_id)
+JOIN rental USING (inventory_id)
+JOIN customer USING (customer_id)
+WHERE email = "JOYCE.EDWARDS@sakilacustomer.org" AND rental_date = "2005-08-21 20:02:18";
+-- 빌린날을 어디서봐야하는지 질문필요(08-21 저숫자가 rental에선 없엇는데 어디서찾는지)
 
