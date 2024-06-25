@@ -30,6 +30,7 @@ FROM film_actor
 JOIN film USING (film_id)
 JOIN actor USING (actor_id)
 WHERE first_name = "JULIA" AND last_name = "MCQUEEN"
+ORDER BY title
 LIMIT 10;
 
 -- 3. 영화 NOON PAPI에 나오는 배우들의 이름 조회
@@ -39,27 +40,50 @@ JOIN film USING (film_id)
 JOIN actor USING (actor_id)
 WHERE title = "NOON PAPI";
 
--- 4. 각 카테고리별 이메일이 JOYCE.EDWARDS@sakilacustomer.org인 고객이 빌린 DVD 대여 수 조회
+-- >> 서브쿼리로도 가능하지만 추천은 안함
+-- >> 사실상 조회해야 되는게 actor 테이블만 필요
+SELECT first_name, last_name
+FROM actor
+WHERE actor_id IN (SELECT actor_id
+FROM film_actor
+WHERE film_id = (SELECT film_id
+					FROM film 
+					WHERE title = 'NOON PAPI'));
+
 SELECT *
-FROM film_category
-JOIN category USING (category_id)
-JOIN film USING (film_id)
-JOIN inventory USING (film_id)
-JOIN rental USING (inventory_id)
+FROM film_actor
+WHERE film_id = (SELECT film_id
+					FROM film 
+					WHERE title = 'NOON PAPI');
+SELECT film_id -- NOON PAPI의 film_id가 몇번인지만 확인해두면 됨
+FROM film 
+WHERE title = 'NOON PAPI';
+
+-- 4. 각 카테고리별 이메일이 JOYCE.EDWARDS@sakilacustomer.org인 고객이 빌린 DVD 대여 수 조회
+SELECT name category, count(*) count
+FROM rental
 JOIN customer USING (customer_id)
+JOIN inventory USING (inventory_id)
+JOIN film_category USING (film_id)
+JOIN category USING (category_id)
+WHERE email = "JOYCE.EDWARDS@sakilacustomer.org" -- 내가 틀린 부분, where을 걸고 group by를 걸어도 된다. 기억
+GROUP BY name;
+
+-- 서브쿼리로 변경
+
+SELECT name category, count(*) count
+FROM rental
+JOIN inventory USING (inventory_id)
+JOIN film_category USING (film_id)
+JOIN category USING (category_id)
+WHERE customer_id = (SELECT customer_id
+					FROM customer 
+					WHERE email = "JOYCE.EDWARDS@sakilacustomer.org")
+GROUP BY name;
+
+SELECT customer_id
+FROM customer 
 WHERE email = "JOYCE.EDWARDS@sakilacustomer.org";
-
-SELECT name
-FROM film_category
-JOIN category USING (category_id)
-JOIN film USING (film_id)
-JOIN inventory USING (film_id)
-JOIN rental USING (inventory_id)
-JOIN customer USING (customer_id)
-GROUP BY name
-HAVING email = "JOYCE.EDWARDS@sakilacustomer.org";
--- 못풀겠어욥..
-
 -- 5. 이메일이 JOYCE.EDWARDS@sakilacustomer.org인 고객이 가장 최근에 빌린 영화 제목과 영화 내용을 조회 
 SELECT title, description
 FROM film_category
@@ -69,5 +93,36 @@ JOIN inventory USING (film_id)
 JOIN rental USING (inventory_id)
 JOIN customer USING (customer_id)
 WHERE email = "JOYCE.EDWARDS@sakilacustomer.org" AND rental_date = "2005-08-21 20:02:18";
--- 빌린날을 어디서봐야하는지 질문필요(08-21 저숫자가 rental에선 없엇는데 어디서찾는지)
 
+SELECT title, description
+FROM rental
+JOIN inventory USING (inventory_id)
+JOIN film USING (film_id)
+JOIN customer USING (customer_id)
+WHERE email =  "JOYCE.EDWARDS@sakilacustomer.org"
+ORDER BY rental_date DESC -- 가장 최근에 대여한 것을 보기 위함
+LIMIT 1;
+
+-- 서브쿼리
+SELECT title, description
+FROM rental
+JOIN inventory USING (inventory_id)
+JOIN film USING (film_id)
+JOIN customer USING (customer_id)
+WHERE email =  "JOYCE.EDWARDS@sakilacustomer.org"
+ORDER BY rental_date DESC
+LIMIT 1;
+
+SELECT max(rental_date)
+FROM rental
+JOIN customer USING (customer_id)
+WHERE email =  "JOYCE.EDWARDS@sakilacustomer.org";
+
+SELECT title, description
+FROM rental
+JOIN inventory USING (inventory_id)
+JOIN film USING (film_id)
+WHERE rental_date = (SELECT max(rental_date)
+					FROM rental
+					JOIN customer USING (customer_id)
+					WHERE email =  "JOYCE.EDWARDS@sakilacustomer.org");
