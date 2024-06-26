@@ -37,9 +37,9 @@ CREATE TABLE book(
 	bk_no INT PRIMARY KEY AUTO_INCREMENT,
     bk_title VARCHAR(30) NOT NULL,
     bk_author VARCHAR(20) NOT NULL,
-    bk_price VARCHAR(20),
+    bk_price INT,
     bk_pub_no INT,
-    FOREIGN KEY (bk_pub_no) REFERENCES publisher(pub_no) ON DELETE CASCADE
+    CONSTRAINT pub_no_fk FOREIGN KEY (bk_pub_no) REFERENCES publisher(pub_no) ON DELETE CASCADE
 );
 
 INSERT INTO book(bk_title, bk_author, bk_price, bk_pub_no)
@@ -55,8 +55,6 @@ VALUES('그로스 해킹', '라이언 홀리데이', '13800', 3);
 
 SELECT * FROM book;
 
-
-
 -- 3. 회원에 대한 데이터를 담기 위한 회원 테이블 (member)
 --    컬럼 : member_no(회원번호) -- 기본 키
 --           member_id(아이디)   -- 중복 금지
@@ -70,14 +68,14 @@ SELECT * FROM book;
 
 CREATE TABLE member(
 	member_no INT PRIMARY KEY AUTO_INCREMENT,
-    member_id VARCHAR(20) UNIQUE,
+    member_id VARCHAR(20) NOT NULL UNIQUE,
     member_pwd VARCHAR(20) NOT NULL,
     member_name VARCHAR(20) NOT NULL,
-    gender VARCHAR(20) CHECK (gender IN ('M', 'F')),
+    gender CHAR(1) CHECK (gender IN ('M', 'F')),
     address VARCHAR(20), 
     phone VARCHAR(20),
-    status VARCHAR(20) DEFAULT 'N' CHECK (status IN ('N', 'Y')),
-    enroll_date VARCHAR(20) DEFAULT (current_date)
+    status CHAR(1) DEFAULT 'N' CHECK (status IN ('N', 'Y')),
+    enroll_date DATE DEFAULT (current_date)
 );
 INSERT INTO member(member_id, member_pwd, member_name, gender, address, phone)
 VALUES ('user01', 'pass01', '가나다', 'M', '서울시 강남구', '010-1111-2222');
@@ -94,16 +92,22 @@ SELECT * FROM member;
 --           rent_book_no(대여 도서번호) -- 외래 키(book와 참조)
 --           rent_date(대여일) -- 기본값 현재날짜
 --    조건 : 이때 부모 데이터 삭제 시 NULL 값이 되도록 옵션 설정
-
 -- ALTER로 FOREIGN KEY만 관리
 CREATE TABLE rent(
 	rent_no INT PRIMARY KEY AUTO_INCREMENT,
     rent_mem_no INT,
-    FOREIGN KEY (rent_mem_no) REFERENCES member(member_no),
+    FOREIGN KEY (rent_mem_no) REFERENCES member(member_no) ON DELETE SET NULL,
     rent_book_no INT,
-    FOREIGN KEY (rent_book_no) REFERENCES book(bk_no),
-    rent_date VARCHAR(20) DEFAULT (current_date)
+    FOREIGN KEY (rent_book_no) REFERENCES book(bk_no) ON DELETE SET NULL,
+    rent_date DATE DEFAULT (current_date)
 );
+/*
+-- ALTER로 FOREIGN KEY만 관리 조건때문에 이렇게 빼는게 사실 정답
+ALTER TABLE rent ADD CONSTRAINT member_no_fk
+	FOREIGN KEY(rent_mem_no) REFERENCES member(member_no) ON DELETE SET NULL,
+ALTER TABLE rent ADD CONSTRAINT book_no_fk
+	FOREIGN KEY(rent_book_no) REFERENCES member(bk_no) ON DELETE SET NULL -> 이런식으로 외래키를 따로 뺄수도있음
+*/
 INSERT INTO rent(rent_mem_no, rent_book_no)
 VALUES (1, 2);
 INSERT INTO rent(rent_mem_no, rent_book_no)
@@ -123,9 +127,27 @@ FROM book
 JOIN rent ON (rent_book_no = bk_no)
 JOIN member ON (rent_mem_no = member_no)
 WHERE bk_no = 2;
+
+SELECT -- 풀이 
+	member_name "회원 이름",
+    member_id 아이디,
+    rent_date 대여일,
+    adddate(rent_date, interval 7 day) "반납 에정일"
+FROM rent
+JOIN member ON (member_no = rent_mem_no)
+WHERE rent_book_no = 2;
 -- 6. 회원번호가 1번인 회원이 대여한 도서들의 도서명, 출판사명, 대여일, 반납예정일을 조회하시오.
 SELECT bk_title 도서명, pub_name 출판사명, rent_date 대여일, adddate(rent_date, interval 7 day) '반납 예정일'
 FROM book
 JOIN publisher ON (bk_pub_no = pub_no)
 JOIN rent ON (rent_book_no = bk_no)
+WHERE rent_mem_no = 1;
+
+SELECT bk_title 도서명, 
+		pub_name 출판사명, 
+		rent_date 대여일, 
+		adddate(rent_date, interval 7 day) '반납 예정일'
+FROM rent
+JOIN BOOK ON (rent_book_no = bk_no)
+JOIN publisher ON (bk_pub_no = pub_no)
 WHERE rent_mem_no = 1;
