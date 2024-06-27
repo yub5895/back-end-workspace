@@ -247,6 +247,7 @@ INSERT INTO product(pname, brand, price, stock)
 
 SELECT * FROM product;
 
+
 -- 2. 상품 입/출고 상세 이력 테이블 생성 (prodetail)
 /*
 	컬럼 : dcode / INT / 기본키 / AUTO_INCREMENT
@@ -267,6 +268,62 @@ CREATE TABLE prodetail (
 -- 1번 상품이 오늘날짜로 10개 입고 (prodetail)
 INSERT INTO prodetail(pcode, amount, status) VALUES(1, 10, '입고');
 -- 1번 상품의 재고수량 10 증가 (product)
+UPDATE product
+SET stock = stock + 10
+WHERE pcode = 1;
+-- 3번 상품이 오늘날짜로 5개 출고
+INSERT INTO prodetail(pcode, amount, status) VALUES(3, 5, '출고');
+-- 3번 상품의 재고수량 5 감소
+UPDATE product
+SET stock = stock - 5
+WHERE pcode = 3;
 
+/*
+	prodetail 테이블에 INSERT 발생시
+    product 테이블에 매번 자동으로 재고수량 UPDATE 되게끔 트리거 정의
+    
+    트리거명 : trg_03
+    IF 조건
+    THEN SQL문
+    ELSE SQL문
+    END IF
+*/
+DELIMITER //
+CREATE TRIGGER trg_03
+AFTER INSERT ON prodetail
+FOR EACH ROW
+BEGIN
+	IF NEW.status = '입고'
+	THEN UPDATE product
+		 SET stock = stock + NEW.amount
+		 WHERE pcode = NEW.pcode;
+	ELSE UPDATE product
+		 SET stock = stock - NEW.amount
+		 WHERE pcode = NEW.pcode;
+	END IF;
+END;
+DELIMITER ;
+-- 2번 상품이 오늘날짜로 20개 입고
+INSERT INTO prodetail(pcode, amount, status) VALUES(2, 20, '입고');
+-- 3번 상품이 오늘날짜로 7개 출고
+INSERT INTO prodetail(pcode, amount, status) VALUES(3, 7, '출고');
+-- 1번 상품이 오늘날짜로 100개 입고
+INSERT INTO prodetail(pcode, amount, status) VALUES(1, 100, '입고');
 SELECT * FROM product;
-SELECT * FROM prodetail 
+SELECT * FROM prodetail;
+
+/*
+	데이터베이스 모델링 (DB 모델링)
+    - 데이터베이스를 설계하는 프로세스
+    - 테이블 간의 관계 정의 및 구조 결정
+    
+    작업 순서
+    1. 개념적 모델링
+		- 엔티티(entity) 추출
+        - 엔티티 간의 관계 설정
+    2. 논리적 모델링 : ERD(Entity Relationship Diagram) 툴 - exerd
+		- 정규화 작업 (1 ~ 5) ... 3까지만 정규화!
+        --> 너무 쪼개면 join만 많아져요!
+    3. 물리적 모델링
+		- 테이블 실질적으로 구성
+*/
