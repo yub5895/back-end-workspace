@@ -1,16 +1,20 @@
 package com.kh.practice;
 
+import java.util.Scanner;
+
 public class VariablePractice {
 	
+	Scanner sc = new Scanner(System.in);
+	
 	public static void main(String[] args) {
-		VariablePractice variable = new VariablePractice();
-		variable.method1();
-		variable.method2();
-		variable.method3();
-		variable.method4();
-		variable.method5();
-		variable.method6();
-		variable.method7();
+		VariablePractice v = new VariablePractice();
+//		v.method1();
+//		v.method2();
+//		v.method3();
+	//	v.method4();
+	v.method5();
+		v.method6();
+		v.method7();
 	}
 	
 	/*
@@ -21,9 +25,15 @@ public class VariablePractice {
 	 * 성인 2명과 청소년 3명이 영화를 보려고 할 때 지불해야 할 금액을 계산 후 출력하세요.
 	 * */
 	public void method1() {
-		int adult = 10000;
-		int kid = 7000;
-		System.out.println(adult * 2+ kid * 3);
+		int adultPrice = 10000;
+		int teenPrice = 7000;
+		int adultCount = 2;
+		int teenCount = 3;
+		
+		int total = adultPrice * adultCount + teenPrice * teenCount;
+		System.out.println("총 지불해야 할 금액 : " + total + "원");
+		System.out.println("총 지불해야 할 금액 : " + (
+				adultPrice * adultCount + teenPrice * teenCount) + "원");
 	}
 
 	
@@ -47,9 +57,16 @@ public class VariablePractice {
 		System.out.println("y=" + yz);
 		System.out.println("z=" + zx);
 
-		
+		int tmp = x; // 코딩테스트에서 자주 나오는 유형
+		x = y;
+		y = z;
+		z = tmp;
+		System.out.println("x=" + x);
+		System.out.println("y=" + y);
+		System.out.println("z=" + z);
 	}
 
+	
 	/*
 	 * 정수 두 개를 입력 받아 두 수의 합(+), 차(-), 곱(*), 나누기(/)한 몫을 출력하세요.
 	 * 
@@ -67,6 +84,18 @@ public class VariablePractice {
 		System.out.println(i1 - i2);
 		System.out.println(i1 * i2);
 		System.out.println(i1 / i2);
+		
+		
+		
+		System.out.print("첫 번째 정수 : ");
+		int num1 = sc.nextInt();
+		System.out.print("두 번째 정수 : ");
+		int num2 = sc.nextInt();
+		
+		System.out.println("더하기 : " + (num1 + num2));
+		System.out.println("뺴기 : " + (num1 - num2));
+		System.out.println("곱하기 : " + (num1 * num2));
+		System.out.println("나누기 몫 : " + (num1 / num2));
 	}
 
 	/*
@@ -84,6 +113,18 @@ public class VariablePractice {
 		float f2 = 41.7F;
 		System.out.println("면적 : " + f1 * f2);
 		System.out.println(("둘레 : ") + (f1 + f2) * 2);
+		
+		
+		System.out.print("가로 : ");
+		float num1 = sc.nextFloat(); // num1이 3번문제와 같이 쓰였지만 중괄호안에 있어서 상관X 
+		System.out.print("세로 : ");
+		float num2 = sc.nextFloat();
+		
+		double area = num1 * num2;
+		double size = (num1 + num2) * 2;
+		System.out.printf("면적 : %.2f\n", + area); // 소수점 2자리까지 표기 위해 ln이 아닌 f사용
+		System.out.printf("둘레 : %.1f", + size);
+		
 	}
 
 	/*
@@ -95,9 +136,12 @@ public class VariablePractice {
 	 * 마지막 문자 : e
 	 * */
 	public void method5() {
-		String str = "apple";
-		System.out.println(str.length());
+		System.out.print("문자열을 입력하세요 : ");
+		String word = sc.nextLine();
 		
+		System.out.println("첫번째 문자 : " + word.charAt(0));
+		System.out.println("두번째 문자 : " + word.charAt(1));
+		System.out.println("마지막 문자 : " + word.charAt(word.length()-1));
 	}
 
 	/*
@@ -112,6 +156,15 @@ public class VariablePractice {
 		System.out.println("A unicode : " + num1);
 		System.out.println("B unicode : " + (num1 + 1));
 
+		
+		System.out.print("문자 : ");
+		char ch = sc.nextLine().charAt(0);
+		
+		int num = ch;
+		
+		char ch2 = (char) (num + 1); // num +1을 합쳐서 형변환 시키려면 괄호를 넣어줘야 한다.
+		System.out.println(ch + " unicode : " + num);
+		System.out.println(ch2 + " unicode : " + (int)ch2);
 	}
 	
 	/*
@@ -129,7 +182,20 @@ public class VariablePractice {
 		int math = 80;
 		float total = (float) korean + english + math;
 		System.out.println("총점 : " + (korean + english + math));
-		System.out.printf("평균 : %.2f", total / 3);
+		System.out.printf("평균 : %.2f\n", total / 3);
+		
+		
+		System.out.print("국어 : ");
+		int kScore = sc.nextInt();
+		System.out.print("영어 : ");
+		int eScore = sc.nextInt();
+		System.out.print("수학 : ");
+		int mScore = sc.nextInt();
+		
+		int sum = kScore + eScore + mScore;
+		
+		System.out.println("총점 : " + sum);
+		System.out.printf("평균 : %.2f", ((double)sum / 3));
 	}
 	
 }
