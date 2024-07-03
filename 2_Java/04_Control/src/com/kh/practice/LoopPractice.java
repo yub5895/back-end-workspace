@@ -10,6 +10,7 @@ class LoopPractice {
 		l.method2();
 //		l.method3();
 //		l.method4();
+//		l.method5();
 	}
 		
     /*
@@ -37,8 +38,10 @@ class LoopPractice {
     
     	for (int i = 1; i <= 100; i+=2) {
     		for (int j = -2; j == i; i+=-2)
-    		sum=i+=j;
-    	System.out.println(i);}
+    		if (i+j <= 100) {
+    			
+    		}
+    	System.out.println(sum);}
     	
   
     }
@@ -88,7 +91,10 @@ class LoopPractice {
 
      */
     public void method5() {
-
+    	int random = (int)(Math.random() *10) ;
+    	System.out.println(random);
+    	for (int i = 0; i <= random; i++);
+    		
     }
 
     /*
@@ -116,5 +122,5 @@ class LoopPractice {
     public void method6() {
 
     }
-
+    
 }
