@@ -27,13 +27,21 @@ public class Book {
 		this.title = title;
 	}
 
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setDiscountRate(double discountRate) {
+		this.discountRate = discountRate;
+	}
+
 	public String getTitle() {
 		return title;
 	}
 
 	@Override
 	public String toString() { // ALT SHIFT S -> Generation toString 누르면 자동생성
-		return "Book [title=" + title + ", price=" + price + ", discountRate=" + discountRate + ", author=" + author
+		return "Book [title=" + title + ", price=" + price + ", discountRate=" + discountRate + ", author : " + author
 				+ "]";
 	}
 

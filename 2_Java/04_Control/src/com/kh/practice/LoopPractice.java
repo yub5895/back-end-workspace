@@ -1,5 +1,6 @@
 package com.kh.practice;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 class LoopPractice {
@@ -7,10 +8,11 @@ class LoopPractice {
 	public static void main(String[] args) {
 		LoopPractice l = new LoopPractice();
 //		l.method1();
-		l.method2();
+//		l.method2();
 //		l.method3();
 //		l.method4();
 //		l.method5();
+		l.method6();
 	}
 		
     /*
@@ -23,7 +25,7 @@ class LoopPractice {
         1
      */
     public void method1() {
-    	System.out.println("숫자 입력(1~100) : ");
+    	System.out.println("사용자 입력 : ");
     	int num = sc.nextInt();
     	
     	for (int i = num; i >= 1; i--) {
@@ -34,17 +36,32 @@ class LoopPractice {
 
     // 1+(-2)+3+(-4)+...과 같은 식으로 계속 더해나갔을 때, 몇까지 더해야 총합이 100 이상 되는지 출력하시오.
     public void method2() {
+    	
     	int sum = 0;
-    
-    	for (int i = 1; i <= 100; i+=2) {
-    		for (int j = -2; j == i; i+=-2)
-    		if (i+j <= 100) {
-    			
+//    	int num = 1;
+    	int num = 0;
+    	
+    	while(sum < 100) {
+    		num++;
+    		if(num % 2 == 0) {
+    			sum -= num;
+    		} else {
+    			sum += num;
     		}
-    	System.out.println(sum);}
+    		/*
+    		if(sum >= 100) {
+    			System.out.println(num);
+    			break;
+    		}
+    		
+    		num++;
+    		*/
+    	}
+    	System.out.println(num);
+    }
     	
   
-    }
+   
 
     /*
         사용자로부터 문자열을 입력 받고 문자열에서 검색될 문자를 입력 받아 해당 문자열에 그 문자가 몇 개 있는지 개수를 출력하세요. 
@@ -54,12 +71,22 @@ class LoopPractice {
         banana 안에 포함된 a 개수 : 3
     */
     public void method3() {
-    	System.out.println("문자열 입력 : ");
-    	String word = sc.nextLine();
+    	System.out.println("문자열 : ");
+    	String str = sc.nextLine();
     	
-    	for(int i = 0; i <= word.length(); i++) {
-    		System.out.println(i);
+    	System.out.println("문자 : ");
+    	char ch = sc.nextLine().charAt(0);
+    	
+    	int count = 0;
+    	
+    /*	for(int i = 0; i < str.length(); i++) {
+    		if(ch == str.charAt(i)) count++;
+    	}*/
+    	
+    	for(char s : str.toCharArray()) {
+    		if(ch == s) count++;
     	}
+    	System.out.println(str + " 안에 포함된 " + ch + " 개수 : " + count);
     }
 
     /*
@@ -72,12 +99,16 @@ class LoopPractice {
         4
         0
      */
-    public void method4() {
-    	int random = (int) (Math.random() * 10);
-    	for(int i = random; i <=10; i++) {
-    		System.out.println(i);
-    	}
-    }
+	public void method4() {
+		while (true) {
+			int random = (int) (Math.random() * 11);
+			System.out.println(random);
+			if (random == 0)
+				break;
+		}
+
+	}
+
 
     /*
         주사위를 10번 굴렸을 때 각 눈의 수가 몇 번 나왔는지 출력하세요. (random 사용!)
@@ -95,8 +126,8 @@ class LoopPractice {
     	System.out.println(random);
     	for (int i = 0; i <= random; i++);
     		
+     for(int i = 0; i < 10; i++);
     }
-
     /*
         사용자의 이름을 입력하고 컴퓨터와 가위바위보를 하세요. 
         컴퓨터가 가위인지 보인지 주먹인지는 랜덤한 수를 통해서 결정하도록 하고, 사용자에게는 직접 가위바위보를 받으세요.
@@ -120,7 +151,47 @@ class LoopPractice {
 	    비긴 횟수 : 1, 진 횟수 : 1, 이긴 횟수 : 1
     */
     public void method6() {
-
+    	String[] rps = {"가위", "바위", "보"};
+    	int win = 0;
+    	int lose = 0;
+    	int draw = 0; 
+    	
+    	System.out.println("당신의 이름을 입력해주세요 : ");
+    	String name = sc.nextLine();
+    	
+    	while(true) {
+    		System.out.println("가위바위보 : ");
+    		String input = sc.nextLine();
+    		
+    		// 0 - 가위, 1 - 바위, 2- 보
+    		int computer = (int) (Math.random() * 3);
+    		System.out.println("컴퓨터 : " + rps[computer]);
+    		
+    		System.out.println(name + " : " + input);
+    		
+    		// 배열에서 값으로 인덱스 찾기 -> 사용자가 입력한 값을 숫자로!
+    		int number = Arrays.asList(rps).indexOf(input);
+    		
+    		if(computer == number) {
+    			// 비겼을 경우
+    			System.out.println("비겼습니다.");  
+    			draw++;
+    		} else if((number == 0 && computer == 2 
+    				|| number == 1 && computer == 0 
+    				|| number == 2 && computer == 1)) {
+    			// 이겼을 경우
+    			System.out.println("이겼습니다!");
+    			win++;
+    			break;
+    		} else {
+    			// 졌을 경우
+    			System.out.println("졌습니다ㅠㅠ");
+    			lose++;
+    	
+    		}
+    	}
+    	
+    	System.out.println("비긴 횟수 : " +draw+", 진 횟수 : "+lose+", 이긴 횟수 : " +win);
     }
-    
+   
 }

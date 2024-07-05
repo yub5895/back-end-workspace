@@ -9,8 +9,7 @@ public class Application {
 		Book book1 = new Book("THE MONEY BOOK", 22000, 0.1, "토스");
 		System.out.println(book1);
 		
-		// setter방식으로 값을 담아냄
-		
+		// setter 방식으로 값을 담아냄
 		Book book2 = new Book(); 
 		book2.setTitle("허송세월");
 		book2.setAuthor("김훈");
