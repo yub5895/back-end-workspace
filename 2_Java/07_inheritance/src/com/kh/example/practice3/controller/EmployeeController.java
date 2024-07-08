@@ -5,6 +5,8 @@ import com.kh.example.practice3.model.Employee;
 public class EmployeeController {
 	private Employee employee = new Employee();
 	
+	// 매개변수가 다른 경우 같은 메서드를 사용할 수 있음 오버로딩!!
+	
 	public void add(int empNo, String name, char gender, String phone) {
 		employee.setEmpNo(empNo);
 		employee.setName(name);
@@ -25,19 +27,19 @@ public class EmployeeController {
 	}
 	
 	public void modify(String phone) {
-		return employee.getPhone() + 
+		employee.setPhone(phone);
 	}
 	
 	public void modify(int salary) {
-		
+		employee.setSalary(salary);
 	}
 	
 	public void modify(double bonus) {
-		
+		employee.setBonus(bonus);
 	}
 	
 	public Employee info() {
-		
-	}
+		return employee;
+		}
 
 }
