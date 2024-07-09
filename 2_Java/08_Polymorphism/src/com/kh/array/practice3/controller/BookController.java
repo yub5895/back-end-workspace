@@ -1,24 +1,26 @@
 package com.kh.array.practice3.controller;
 
 import com.kh.array.practice3.model.Book;
+import com.kh.array.practice3.model.rentalBook;
+
 
 public class BookController {
 
 	private Book book = new Book();
+	private rentalBook bookList = new rentalBook();
 	
-	public void rentalBook(String title, boolean coupon, int accessAge) {
-		book.setTitle(title);
-		book.setCoupon(coupon);
-		book.setAccessAge(accessAge);
+	public void bookList(String title, boolean coupon, int accessAge) {
+		bookList.setTitle(title);
+		bookList.setCoupon(coupon);
+		bookList.setAccessAge(accessAge);
 	}
 	
-	public void myPageBook(String title, String name, int age, String bookList, boolean coupon, int accessAge) {
-		book.setTitle(title);
+	public void myPageBook(String name, int age ) {
+
 		book.setName(name);
 		book.setAge(age);
-		book.setBookList(bookList);
-		book.setCoupon(coupon);
-		book.setAccessAge(accessAge);
-		
+	
 	}
+	
+
 }
