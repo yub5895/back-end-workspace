@@ -1,5 +1,7 @@
 package com.kh.list;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -52,7 +54,7 @@ public class B_Other {
 	public void method3() {
 		
 		// 큐는 인터페이스라 그냥은 객체연결이 안됨
-		Queue q = new Linkedist(); {
+		Queue q = new LinkedList(); {
 	}
 		q.offer(0);
 		q.offer(1);
@@ -65,6 +67,7 @@ public class B_Other {
 		q.add(6);
 		q.add(7);
 		q.remove();
+		System.out.println(q); // 3, 4, 5, 6, 7
 }
 	public static void main(String[] args) {
 		B_Other b = new B_Other();

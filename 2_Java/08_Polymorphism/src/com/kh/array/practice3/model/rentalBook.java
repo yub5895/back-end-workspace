@@ -4,11 +4,13 @@ public class rentalBook {
 	private boolean coupon;
 	private int accessAge;
 	private String title;
+	
+	
 
 	public rentalBook() {
 	}
 
-	public rentalBook(boolean coupon, int accessAge, String title) {
+	public rentalBook(String title, boolean coupon, int accessAge) {
 		this.coupon = coupon;
 		this.accessAge = accessAge;
 		this.title = title;
