@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import com.kh.practice.model.Singer;
 import com.kh.practice.model.Song;
 
 public class Application {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		ArrayList<Song> list = new ArrayList<Song>();
+		ArrayList<String> list = new ArrayList<String>();
 
 		while (true) {
 			System.out.println("==== 메인메뉴 ====");
@@ -30,11 +29,11 @@ public class Application {
 			case 1:
 				System.out.println("****** 마지막 위치에 곡 추가 ******");
 				System.out.println("곡명 : ");
-				String Song = sc.next(); 
+				String song1 = sc.next(); 
 				System.out.println("가수 명 : ");
-				String Singer = sc.next();
-				list.add(new Song(Song.get(0))); // 클래스를 송+싱어 1개만 하고 송부분에만 추가, 싱어부분에만 추가할수 있는지 생각
-				list.add(new Singer(Singer));
+				String singer1 = sc.next();
+				list.add(song1); // 클래스를 송+싱어 1개만 하고 송부분에만 추가, 싱어부분에만 추가할수 있는지 생각
+				list.add(singer1);
 				System.out.println("추가 성공");
 				break;
 			case 2:
@@ -43,17 +42,14 @@ public class Application {
 				String Song2 = sc.next();
 				System.out.println("가수 명 : ");
 				String Singer2 = sc.next();
-				list.add(0, new Song(Song2));
-				list2.add(0, new Singer(Singer2));
+				list.add(0, Song2);
+				list.add(0, Singer2);
 				System.out.println("추가 성공");
 				break;
 			case 3:
 				System.out.println("****** 전체 곡 목록 출력 ******");
-				
-				for (Singer ss : list2 + Song s : list) {
-					System.out.print(ss.getSinger() + " - " + s.getSong());
-					} // 클래스를 송/싱어 두개로 나누고 출력할때 합쳐서 하는 방법이 있는지 생각
-
+				System.out.println(list);
+				// 클래스를 송/싱어 두개로 나누고 출력할때 합쳐서 하는 방법이 있는지 생각
 			case 4:
 			case 5:
 			case 6:
@@ -62,5 +58,7 @@ public class Application {
 			case 9:
 			}
 		}
+		
 	}
+	
 }

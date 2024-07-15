@@ -15,8 +15,7 @@ public class Application {
 				new Book("오늘은 아무래도 덮밥", false, 0),
 				new Book("원피스 108", false, 15),
 				new Book("귀멸의 칼날 23", false, 19)};
-	int count = 0; // 
-	boolean check = true; 
+
 	
 	public static void main(String[] args) {
 		Application app = new Application();
@@ -51,36 +50,10 @@ public class Application {
 				}
 				System.out.println("대여할 도서 번호 선택 : ");
 				int select = Integer.parseInt(sc.nextLine());
-				if (count < 2) { // 2까지만 카운트할 수 있다. -> 대여할 수 있는 개수제한을 두기 위해
-					// 이미 대여한 책은 대여 불가능하게 만들어야 하는 경우
-					for (Book book : member.getBookList()) {
-						if (book != null && book.equals(books[select - 1])) {
-							System.out.println("이미 대여한 책입니다.");
-							check = false;
-							break;
-						}
-					}
-					//
-					if (check) {
-
-						if (member.getAge() < books[select - 1].getAccessAge()) {
-							System.out.println("나이 제한으로 대여 불가능입니다.");
-						} else {
-							// select(index+1) 번호에 따라서 해당 책이 Member - bookList에 추가되어야 한다.
-							member.getBookList()[count++] = books[select - 1];
-							// 쿠폰을 가지고 있는 경우
-							if (books[select - 1].isCoupon()) { // 북을 고르는 경우, 쿠폰을 1개씩 추가시킨다라는 기능
-								member.setCoupon(member.getCoupon() + 1);
-							}
-						} // member클래스의 booklist배열 0번자리는 books[select]가 들어간다.
-							// select-1이 되는 이유는, 위에서 번호를 붙이기 위해 i+1이 되었기 때문이다.
-						System.out.println("성공적으로 대여되었습니다.");
-					}
-					check = true;
-				} else {
-					System.out.println("더 이상 대여할 수 없습니다.");
+				bc.rentBook(books[select-1]);
+				break;
 			case 3:
-				System.out.println("더 이상 대여할 수 없습니다.");
+				close = false;
 				break;
 				
 			}
