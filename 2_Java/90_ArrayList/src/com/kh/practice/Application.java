@@ -12,6 +12,7 @@ public class Application {
 		Scanner sc = new Scanner(System.in);
 		ArrayList<String> list = new ArrayList<String>();
 
+		boolean end = true;
 		while (true) {
 			System.out.println("==== 메인메뉴 ====");
 			System.out.println("1. 마지막 위치에 곡 추가");
@@ -50,12 +51,34 @@ public class Application {
 				System.out.println("****** 전체 곡 목록 출력 ******");
 				System.out.println(list);
 				// 클래스를 송/싱어 두개로 나누고 출력할때 합쳐서 하는 방법이 있는지 생각
-			case 4:
+				break;
+			case 4: 
+				System.out.println("****** 특정 곡 검색 ******");
+				System.out.println("검색할 곡 명 : ");
+				String search = sc.next();
+				// if search==song1 이런방법으로 할수있는지 생각
+				break;
 			case 5:
+				System.out.println("****** 특정 곡 삭제 ******");
+				System.out.println("삭제 할 곡 명 : ");
+				String removeSong = sc.next();
+				list.remove(removeSong);
+				break;
 			case 6:
+				System.out.println("****** 특정 곡 수정 *******");
+				System.out.println("검색할 곡 명 : ");
+				String setSong = sc.next();
+				list.set(0, setSong); // setSong만으론 안됨다른방법 생각
+				break;
 			case 7:
+				break;
 			case 8:
+				break;
 			case 9:
+				System.out.println("종료");
+				end = false;
+				break;
+				
 			}
 		}
 		

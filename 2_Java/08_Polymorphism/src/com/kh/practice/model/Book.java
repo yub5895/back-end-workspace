@@ -1,11 +1,10 @@
 package com.kh.practice.model;
 
 public class Book {
-
+	
 	private String title;
 	private boolean coupon;
 	private int accessAge;
-	
 	public Book() {
 	}
 	public Book(String title, boolean coupon, int accessAge) {
