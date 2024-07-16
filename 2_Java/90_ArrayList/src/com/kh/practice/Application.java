@@ -62,7 +62,7 @@ public class Application {
 				System.out.println("****** 특정 곡 삭제 ******");
 				System.out.println("삭제 할 곡 명 : ");
 				String removeSong = sc.next();
-				list.remove(removeSong);
+				list.remove(removeSong); // remove만으로x
 				break;
 			case 6:
 				System.out.println("****** 특정 곡 수정 *******");
