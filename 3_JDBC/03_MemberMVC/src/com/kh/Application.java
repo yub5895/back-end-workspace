@@ -71,6 +71,7 @@ public class Application {
 	}
 
 	public void login() throws SQLException {
+		Member member = new Member();
 		// 아이디, 비밀번호를 사용자한테 입력받아
 		System.out.print("아이디 : ");
 		String id = sc.nextLine();
@@ -78,6 +79,13 @@ public class Application {
 		System.out.print("비밀번호 : ");
 		String password = sc.nextLine();
 		
+		
+		Member result = mc.login(id, password);
+		if(member.getName() != null) {
+			System.out.println(member.getName() + "님 환영합니다!");
+		} else {
+			System.out.println("틀린 아이디 또는 비밀번호입니다. 다시 입력해주세요.");
+		}
 		
 		
 		// MemberController의 login 메서드 반환 결과를 이름으로 받고

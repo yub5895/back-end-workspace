@@ -20,7 +20,7 @@ public class MemberController {
 	}
 
 	public Connection getConnect() throws SQLException {
-		return DriverManager.getConnection("jdbc:mysql://localhost:3306/kh", "root", "qwer1234");
+		return DriverManager.getConnection("jdbc:mysql://localhost:3306/member", "root", "qwer1234");
 	}
 
 	public void closeAll(PreparedStatement ps, Connection conn) throws SQLException {
@@ -53,7 +53,7 @@ public class MemberController {
 		// -> member 테이블에 데이터 추가!
 	}
 	
-	public void login(String id, String password) throws SQLException {
+	public Member login(String id, String password) throws SQLException {
 		Connection conn = getConnect();
 		
 		String query = "SELECT * FROM member WHERE id = ?, password = ?";
@@ -68,9 +68,13 @@ public class MemberController {
 		
 		if(rs.next()) {
 			member = new Member (rs.getString("id"),
-								rs.getString("password"));
+								rs.getString("password"), query);
 				}
-		}
+		
+		closeAll(rs, ps, conn);
+		
+		return member;
+		
 		
 		
 		// 로그인 기능 구현! 
@@ -78,15 +82,41 @@ public class MemberController {
 		
 	}
 	
-	public void changePassword() {
-
+	public String changePassword(Member member) throws SQLException {
+		Connection conn = getConnect();
+		
+		String query = "UPDATE member SET password = ? WHERE id = ?";
+		PreparedStatement ps = conn.prepareStatement(query);
+		
+		ps.setString(1, member.getPassword());
+		
+		String name = null;
+		if (ps.executeUpdate() == 1) {
+			if(name != null) {
+				name = member.getPassword();
+			}
+		}
+		
+		System.out.println(ps.executeUpdate() + "비밀번호 수정");
+		
+		closeAll(ps, conn);
+		
+		return member.getPassword();
 		// 비밀번호 바꾸기 기능 구현!
 		// -> login 메서드 활용 후 사용자 이름이 null이 아니면 member 테이블에서 id로 새로운 패스워드로 변경
 
 	}
 	
-	public void changeName() {
-
+	public void changeName(Member member) throws SQLException {
+		Connection conn = getConnect();
+		
+		String query = "UPDATE member SET name = ? WHERE id = ?";
+		PreparedStatement ps = conn.prepareStatement(query);
+		
+		ps.setString(1,  member.getName());
+		
+		System.out.println(ps.executeUpdate() + "이름 수정");
+		
 		// 이름 바꾸기 기능 구현!
 		// -> member 테이블에서 id로 새로운 이름으로 변경 
 		
