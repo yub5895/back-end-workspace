@@ -18,4 +18,8 @@ public class Book {
 		this.bk_author = bk_author;
 	}
 	
+	public Book(String bk_title) {
+		this.bk_title = bk_title;
+	}
+	
 }
