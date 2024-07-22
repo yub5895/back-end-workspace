@@ -13,6 +13,6 @@ public class Rent {
 	
 	public int rentNo;
 	public int rentMemNo;
-	public int rentBookNo;
+	public Book book;
 	public Date rentDate;
 }
