@@ -7,7 +7,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>회원 검색 실패했습니다..</h1>
-	<a href="/">메인 페이지로 이동</a>
+	<h1>회원검색</h1>
+	<form action="/search"> <%-- get은 생략 가능 기본값임 --%>
+		검색할 회원 아이디 : <input type="text" name="id"><br>
+		<input type="submit" value="검색">
+	</form>
 </body>
 </html>

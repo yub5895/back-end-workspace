@@ -1,7 +1,9 @@
 package com.kh.controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import com.kh.model.dao.MemberDAO;
 import com.kh.model.vo.Member;
 
 import jakarta.servlet.annotation.WebServlet;
@@ -18,11 +20,17 @@ public class LoginServlet extends HttpServlet{
 		String id = request.getParameter("id");
 		String password = request.getParameter("password");
 		
-		Member member = new Member("id", "password", "name");
+		MemberDAO dao = new MemberDAO();
+		try {
+			Member member = dao.login(id, password);
+			
+			HttpSession session = request.getSession();
+			session.setAttribute("member", member);
+			
+			response.sendRedirect("/index.jsp");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
-		HttpSession session = request.getSession();
-		request.setAttribute("info", member);
-
-		response.sendRedirect("index.jsp");
 	}
 }
