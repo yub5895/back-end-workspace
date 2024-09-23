@@ -1,7 +1,7 @@
 -- 회원
 CREATE TABLE member (
 	id VARCHAR(20) PRIMARY KEY,
-    password VARCHAR(20),
+    password VARCHAR(60),
     email VARCHAR(50),
     phone VARCHAR(13)
     
@@ -23,7 +23,7 @@ CREATE TABLE video(
     video_img VARCHAR(100),
     video_title VARCHAR(80),
     video_count INT,
-    video_date DATE DEFAULT (current_date),
+    video_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     video_desc TEXT, 
     FOREIGN KEY (channel_code) REFERENCES channel(channel_code)
 );
@@ -32,7 +32,7 @@ CREATE TABLE video(
 CREATE TABLE comment(
 	comment_code INT PRIMARY KEY AUTO_INCREMENT,
     comment_text TEXT,
-    comment_date DATE DEFAULT (current_date),
+    comment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     id VARCHAR(20),
     video_code INT,
     parent_code INT,
@@ -57,3 +57,6 @@ CREATE TABLE video_like(
     FOREIGN KEY (id) REFERENCES member(id),
     FOREIGN KEY (video_code) REFERENCES video(video_code)
 );
+
+SELECT * FROM video;
+
